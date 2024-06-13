@@ -1,0 +1,73 @@
+model_args:
+  tokenizer_name: roneneldan/TinyStories-1M
+
+data_args:
+  dataset_name: roneneldan/TinyStories
+  dataset_config_name: null
+  max_train_samples: 2
+  max_eval_samples: 2
+  streaming: True
+
+training_args:
+  run_name: tiny_model
+  output_dir: output_tiny
+  overwrite_output_dir: True
+  do_train: True
+  do_eval: True
+  per_device_train_batch_size: 156
+  per_device_eval_batch_size: 156
+  learning_rate: 1e-3
+  warmup_ratio: 0.0
+  lr_scheduler_type: constant
+  # num_train_epochs: 10
+  max_steps: 1000
+  logging_first_step: True
+  logging_steps: 20
+  evaluation_strategy: steps
+  eval_steps: 50
+  save_steps: 100
+  save_total_limit: 2
+  load_best_model_at_end: True
+  
+  train_model_params: True
+  model_lr_factor: 0.1
+  codebook_reg_p: null
+  codebook_weight_decay: 0.01
+
+codebook_args:
+  codebook_at: ["attn_preproj", "mlp"]
+  codebook_type: ["group", "vanilla"]
+  num_codebooks: [-1, 1]
+  k_codebook: [1,1]
+  num_codes: 10
+  layers_to_snap: all
+  similarity_metric: inner_product
+  loss: aeloss
+  kmeans_init: False
+  codebook_kwargs: null
+  replace_codes: True
+
+k_scheduler_kwargs: null
+
+model_config_args:
+  model_path: roneneldan/TinyStories-1M
+  continue_training: False
+  # model_type: gptneox
+  # hidden_size: 128
+  # intermediate_size: 512
+  # num_hidden_layers: 4
+  # num_attention_heads: 4
+  # rotary_emb_base: 10000
+  # seq_len: 128
+  # vocab_size: 11
+
+
+
+apply_codebook: True
+enable_logging: True
+wandb_charts: False
+pretrained_path: null
+get_baseline: False
+tag_keys: [codebook_type, num_codebooks, k_codebook, loss]
+tags: ["tiny_main"]
+project: codebook
