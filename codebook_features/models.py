@@ -517,7 +517,7 @@ class CodebookLayer(nn.Module):
             # this hook is used to modify/block activated codes during inference
             old_codebook_ids = codebook_ids.clone()
             codebook_ids = self.hook_codebook_ids(codebook_ids)
-            block_idx = torch.isin(codebook_ids, -1)
+            block_idx = torch.isin(codebook_ids, torch.tensor([-1], device=codebook_ids.device))
             if torch.any(codebook_ids != old_codebook_ids) or torch.any(block_idx):
                 # TODO: clean this.
                 # change -1 to 0 and zero ablate the blocked codes before computing mean
@@ -2054,7 +2054,7 @@ class HookedTransformerCodebookModel(CodebookModel):
         return self.model.cfg
 
 
-def wrap_codebook(model_or_path, config=None, pretrained_path=None):
+def wrap_codebook(model_or_path, config=None, pretrained_path=None) -> CodebookModel:
     """Wrap a model with codebooks."""
     if isinstance(model_or_path, str):
         model = transformers.AutoModelForCausalLM.from_pretrained(model_or_path)
