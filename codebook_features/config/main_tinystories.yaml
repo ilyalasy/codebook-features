@@ -35,10 +35,10 @@ training_args:
   codebook_weight_decay: 0.01
 
 codebook_args:
-  codebook_at: ["attn_preproj", "mlp"]
-  codebook_type: ["group", "vanilla"]
-  num_codebooks: [-1, 1]
-  k_codebook: [1,1]
+  codebook_at: ["mlp"]
+  codebook_type: ["vanilla"]
+  num_codebooks: [1]
+  k_codebook: [2]
   num_codes: 10
   layers_to_snap: all
   similarity_metric: inner_product
@@ -63,11 +63,11 @@ model_config_args:
 
 
 
-apply_codebook: True
+apply_codebook: False
 enable_logging: True
 wandb_charts: False
 pretrained_path: null
 get_baseline: False
 tag_keys: [codebook_type, num_codebooks, k_codebook, loss]
-tags: ["tiny_main"]
+tags: ["tiny_main_nocodebook"]
 project: codebook

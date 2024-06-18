@@ -208,15 +208,16 @@ def main(cfg):
     if cfg.get_baseline:
         return get_baseline(training_args, model_args, data_args, model)
 
-    codebook_config = models.CodebookModelConfig(**cfg_dict["codebook_args"])
-    model = models.wrap_codebook(
-        model_or_path=model,
-        config=codebook_config,
-        pretrained_path=cfg.pretrained_path,
-    )
+    if cfg_dict["apply_codebook"]:
+        codebook_config = models.CodebookModelConfig(**cfg_dict["codebook_args"])
+        model = models.wrap_codebook(
+            model_or_path=model,
+            config=codebook_config,
+            pretrained_path=cfg.pretrained_path,
+        )
 
-    if cfg.enable_logging:
-        model.enable_logging()
+        if cfg.enable_logging:
+            model.enable_logging()
 
     optimizer = get_optimizer(training_args, model)
 
