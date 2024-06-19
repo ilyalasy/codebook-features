@@ -208,6 +208,7 @@ def main(cfg):
     if cfg.get_baseline:
         return get_baseline(training_args, model_args, data_args, model)
 
+    codebook_config = None
     if cfg_dict["apply_codebook"]:
         codebook_config = models.CodebookModelConfig(**cfg_dict["codebook_args"])
         model = models.wrap_codebook(
@@ -219,7 +220,9 @@ def main(cfg):
         if cfg.enable_logging:
             model.enable_logging()
 
-    optimizer = get_optimizer(training_args, model)
+    optimizer = None
+    if isinstance(model, models.CodebookModel):
+        optimizer = get_optimizer(training_args, model)
 
     callbacks = [cb_trainer.WandbCallback()] if wandb_initilized else []
     if cfg.k_scheduler_kwargs is not None:
@@ -235,10 +238,11 @@ def main(cfg):
         callbacks=callbacks,
     )
 
-    if codebook_config.kmeans_init and training_args.local_rank <= 0:
+    if codebook_config and codebook_config.kmeans_init and training_args.local_rank <= 0:
         model.init_codebook(trainer.get_train_dataloader())
 
-    model.enable_codebooks()
+    if isinstance(model, models.CodebookModel):
+        model.enable_codebooks()
     # compile doesn't work on Windows or python 3.11+ currently
     if os.name != "nt" and sys.version_info < (3, 11):
         model = torch.compile(model)

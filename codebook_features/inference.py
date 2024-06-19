@@ -8,8 +8,8 @@ import transformers
 from codebook_features import models
 from codebook_features.train_codebook import ModelConfigArguments, load_model, prepare_logging
 
-PRETRAINED_PATH = "output_tiny/wandb/latest-run/train_output"
-DEVICE = "mps"
+PRETRAINED_PATH = "/tmp/wandb/run-20240618_160404-v2aqwbhm/train_output"
+DEVICE = "cuda:0"
 
 
 @hydra.main(config_path="config", config_name="main_tinystories", version_base=None)
@@ -25,9 +25,10 @@ def main(cfg):
     cfg_dict, _ = prepare_logging(cfg)
     model = load_model(config_args)
 
-    codebook_config = models.CodebookModelConfig(**cfg_dict["codebook_args"])
+    if cfg_dict["apply_codebook"]:
+        codebook_config = models.CodebookModelConfig(**cfg_dict["codebook_args"])
+        model = models.wrap_codebook(model_or_path=model, config=codebook_config)
 
-    model = models.wrap_codebook(model_or_path=model, config=codebook_config)
     with open(Path(PRETRAINED_PATH) / "pytorch_model.bin", "rb") as f:
         state = torch.load(f, map_location=DEVICE)
     model.load_state_dict(state)
