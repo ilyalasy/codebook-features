@@ -4,9 +4,10 @@ model_args:
 data_args:
   dataset_name: roneneldan/TinyStories
   dataset_config_name: null
-  max_train_samples: 2
-  max_eval_samples: 2
-  streaming: True
+  block_size: 2048
+  # max_train_samples: 2
+  # max_eval_samples: 2
+  streaming: False #True
 
 training_args:
   run_name: tiny_model
@@ -14,18 +15,19 @@ training_args:
   overwrite_output_dir: True
   do_train: True
   do_eval: True
-  per_device_train_batch_size: 156
-  per_device_eval_batch_size: 156
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 2
   learning_rate: 5e-4  
   warmup_ratio: 0.01
   lr_scheduler_type: polynomial
   # num_train_epochs: 10
   max_steps: 35000
   logging_first_step: True
-  logging_steps: 20
+  logging_steps: 50
   evaluation_strategy: steps
-  eval_steps: 50
-  save_steps: 100
+  eval_steps: 500
+  save_steps: 1000
   save_total_limit: 2
   load_best_model_at_end: True  
   train_model_params: True
