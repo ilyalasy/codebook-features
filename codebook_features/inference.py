@@ -8,7 +8,7 @@ import transformers
 from codebook_features import models
 from codebook_features.train_codebook import ModelConfigArguments, load_model, prepare_logging
 
-PRETRAINED_PATH = "/tmp/wandb/run-20240618_160404-v2aqwbhm/train_output"
+PRETRAINED_PATH = "output_tiny/wandb/latest-run/train_output"
 DEVICE = "cuda:0"
 
 

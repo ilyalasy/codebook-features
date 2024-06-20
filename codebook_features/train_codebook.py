@@ -69,7 +69,7 @@ def prepare_logging(cfg):
     # prepare tags and wandb run name from tags
     tags = sorted(cfg.tags)
     for key in sorted(cfg.tag_keys):
-        tags.append(f"{shortened_args[key]}: {flat_cfg_dict[key]}")
+        tags.append(f"{shortened_args.get(key,flat_cfg_dict[key])}: {flat_cfg_dict[key]}")
     if tags:
         cfg_dict["training_args"]["run_name"] = ", ".join(tags)
 

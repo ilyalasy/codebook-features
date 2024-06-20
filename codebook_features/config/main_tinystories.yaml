@@ -16,21 +16,20 @@ training_args:
   do_eval: True
   per_device_train_batch_size: 156
   per_device_eval_batch_size: 156
-  learning_rate: 1e-3
-  warmup_ratio: 0.0
-  lr_scheduler_type: constant
+  learning_rate: 5e-4  
+  warmup_ratio: 0.01
+  lr_scheduler_type: polynomial
   # num_train_epochs: 10
-  max_steps: 1000
+  max_steps: 35000
   logging_first_step: True
   logging_steps: 20
   evaluation_strategy: steps
   eval_steps: 50
   save_steps: 100
   save_total_limit: 2
-  load_best_model_at_end: True
-  
+  load_best_model_at_end: True  
   train_model_params: True
-  model_lr_factor: 0.1
+  # model_lr_factor: 0.1
   codebook_reg_p: null
   codebook_weight_decay: 0.01
 
@@ -68,6 +67,6 @@ enable_logging: True
 wandb_charts: False
 pretrained_path: null
 get_baseline: False
-tag_keys: [codebook_type, num_codebooks, k_codebook, loss]
-tags: ["tiny_main_nocodebook"]
+tag_keys: [loss,learning_rate,lr_scheduler_type, warmup_ratio]
+tags: ["tiny_main_nocodebook",]
 project: codebook
