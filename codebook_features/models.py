@@ -149,7 +149,7 @@ class BaseSnapFunction(torch.autograd.Function):
             with torch.enable_grad():
                 mse_loss = torch.mean(((outputs - inputs) ** 2).sum(dim=-1))
                 grad_codebook_mse = torch.autograd.grad(mse_loss, codebook, retain_graph=True)[0]
-            grad_codebook = torch.autograd.grad(outputs, codebook, grad_outputs)[0]
+            grad_codebook = torch.autograd.grad(outputs, codebook, grad_outputs, retain_graph=True)[0]
 
             grad_codebook += grad_codebook_mse
             # straight through estimator
